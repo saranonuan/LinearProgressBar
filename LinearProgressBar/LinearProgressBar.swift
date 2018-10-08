@@ -13,7 +13,7 @@ import UIKit
 public class LinearProgressBar: UIView {
     
     //FOR DATA
-    private var screenSize: CGRect = UIScreen.mainScreen().bounds
+    private var screenSize: CGRect = UIScreen.main.bounds
     private var isAnimationRunning = false
     
     //FOR DESIGN
@@ -26,13 +26,13 @@ public class LinearProgressBar: UIView {
     public var widthForLinearBar: CGFloat = 0
     
     public init () {
-        super.init(frame: CGRectMake(0, 20, screenSize.width, 0))
-        self.progressBarIndicator = UIView(frame: CGRectMake(0, 0, 0, heightForLinearBar))
+        super.init(frame: CGRect(x: 0, y: 20, width: screenSize.width, height: 0))
+        self.progressBarIndicator = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: heightForLinearBar))
     }
     
     override public init(frame: CGRect) {
         super.init(frame: frame)
-        self.progressBarIndicator = UIView(frame: CGRectMake(0, 0, 0, heightForLinearBar))
+        self.progressBarIndicator = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: heightForLinearBar))
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -42,18 +42,20 @@ public class LinearProgressBar: UIView {
     //MARK: LIFE OF VIEW
     override public func layoutSubviews() {
         super.layoutSubviews()
-        self.screenSize = UIScreen.mainScreen().bounds
+        self.screenSize = UIScreen.main.bounds
         
         if widthForLinearBar == 0 || widthForLinearBar == self.screenSize.height {
             widthForLinearBar = self.screenSize.width
         }
         
-        if (UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation)) {
-            self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, widthForLinearBar, self.frame.height)
+        
+        
+        if (UIDeviceOrientation.landscapeLeft == UIDevice.current.orientation || UIDeviceOrientation.landscapeRight == UIDevice.current.orientation) {
+            self.frame = CGRect(x: self.frame.origin.x, y: self.frame.origin.y, width: widthForLinearBar, height: self.frame.height)
         }
         
-        if (UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation)) {
-            self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, widthForLinearBar, self.frame.height)
+        if (UIDeviceOrientation.portrait == UIDevice.current.orientation || UIDeviceOrientation.portrait == UIDevice.current.orientation) {
+            self.frame = CGRect(x: self.frame.origin.x, y: self.frame.origin.y, width: widthForLinearBar, height: self.frame.height)
         }
     }
     
@@ -67,7 +69,7 @@ public class LinearProgressBar: UIView {
         if !isAnimationRunning {
             self.isAnimationRunning = true
 
-            UIView.animateWithDuration(0.5, delay:0, options: [], animations: {
+            UIView.animate(withDuration: 0.5, delay:0, options: [], animations: {
                 self.frame = CGRect(x: 0, y: self.frame.origin.y, width: self.widthForLinearBar, height: self.heightForLinearBar)
                 }, completion: { animationFinished in
                     self.addSubview(self.progressBarIndicator)
@@ -81,7 +83,7 @@ public class LinearProgressBar: UIView {
         
         self.isAnimationRunning = false
         
-        UIView.animateWithDuration(0.5, animations: {
+        UIView.animate(withDuration: 0.5, animations: {
             self.progressBarIndicator.frame = CGRect(x: 0, y: 0, width: self.widthForLinearBar, height: 0)
             self.frame = CGRect(x: 0, y: self.frame.origin.y, width: self.widthForLinearBar, height: 0)
         })
@@ -103,15 +105,15 @@ public class LinearProgressBar: UIView {
             return
         }
 
-        self.progressBarIndicator.frame = CGRectMake(0, 0, 0, heightForLinearBar)
+        self.progressBarIndicator.frame = CGRect(x: 0, y: 0, width: 0, height: heightForLinearBar)
 
-        UIView.animateKeyframesWithDuration(1.0, delay: 0, options: [], animations: {
+        UIView.animateKeyframes(withDuration: 1.0, delay: 0, options: [], animations: {
 
-            UIView.addKeyframeWithRelativeStartTime(0, relativeDuration: 0.5, animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5, animations: {
                 self.progressBarIndicator.frame = CGRect(x: 0, y: 0, width: self.widthForLinearBar*0.7, height: self.heightForLinearBar)
             })
 
-            UIView.addKeyframeWithRelativeStartTime(0.5, relativeDuration: 0.5, animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5, animations: {
                 self.progressBarIndicator.frame = CGRect(x: superview.frame.width, y: 0, width: 0, height: self.heightForLinearBar)
 
             })
